@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 7 · Артикли — интерактивные упражнения 7.1, 7.2 и 7.3</title>
+<style>
+  :root{
+    --paper:#F7F2E8; --card:#FFFCF5; --ink:#23252B; --line:#E4DCCB;
+    --a:#DD4B26; --the:#27348B; --zero:#6B7280;
+    --ok:#1E8E3E; --bad:#D93025; --warn:#F29900;
+    --sans:'Segoe UI', system-ui, -apple-system, Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --serif:Georgia, 'Times New Roman', 'DejaVu Serif', serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--paper); color:var(--ink); font-family:var(--sans);}
+  .wrap{max-width:960px; margin:0 auto; padding:0 20px;}
+
+  /* ---------- hero ---------- */
+  header.hero{position:relative; overflow:hidden; border-bottom:1px solid var(--line); padding:34px 0 26px;}
+  .kicker{display:inline-block; background:#40434B; color:#fff; font:800 12px/1 var(--sans); letter-spacing:1.6px; padding:7px 12px; border-radius:6px; margin-bottom:14px;}
+  h1{font:800 34px/1.15 var(--sans); letter-spacing:-.5px;}
+  h1 em{font:italic 700 34px/1 var(--serif); color:var(--the);}
+  .sub{margin-top:10px; font:400 15.5px/1.55 var(--sans); color:#5C5648; max-width:640px;}
+  .legend{display:flex; flex-wrap:wrap; gap:10px; margin-top:16px;}
+  .chip{display:inline-flex; align-items:center; gap:9px; background:var(--card); border:1px solid var(--line); border-radius:999px; padding:6px 14px 6px 6px; font:600 13px var(--sans); color:#4A4436;}
+  .chip b{font:700 14px var(--serif); color:#fff; border-radius:999px; padding:4px 11px;}
+  .chip.ca b{background:var(--a);} .chip.ct b{background:var(--the);} .chip.cz b{background:var(--zero);} .chip.cs b{background:#8A5B00;}
+  .glyphs{position:absolute; right:26px; top:14px; display:flex; gap:20px; pointer-events:none; user-select:none;}
+  .glyphs span{font:italic 700 92px/1 var(--serif); opacity:.13;}
+  .glyphs span:nth-child(1){color:var(--a); transform:rotate(-8deg);}
+  .glyphs span:nth-child(2){color:var(--the); transform:rotate(5deg) translateY(8px);}
+  .glyphs span:nth-child(3){color:var(--zero); transform:rotate(-4deg);}
+
+  /* ---------- toolbar ---------- */
+  .toolbar{position:sticky; top:0; z-index:50; background:rgba(247,242,232,.94); backdrop-filter:blur(6px); border-bottom:1px solid var(--line); padding:10px 0;}
+  .tb-row{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+  .btn{font:700 14px var(--sans); border-radius:10px; padding:9px 16px; cursor:pointer; border:1.5px solid transparent; transition:.15s;}
+  .btn:active{transform:translateY(1px);}
+  .btn-primary{background:var(--ink); color:#fff;}
+  .btn-primary:hover{box-shadow:0 4px 14px rgba(35,37,43,.28); transform:translateY(-1px);}
+  .btn-outline{background:#fff; border-color:#C9C0AC; color:#4A4436;}
+  .btn-outline:hover{border-color:#8A8272;}
+  .btn-ghost{background:transparent; color:#6B6353;}
+  .btn-ghost:hover{background:#EFE8D8;}
+  .switch{display:inline-flex; align-items:center; gap:8px; font:600 13px var(--sans); color:#4A4436; cursor:pointer; margin-left:auto;}
+  .switch input{width:16px; height:16px; accent-color:var(--the); cursor:pointer;}
+  .tb-row2{display:flex; align-items:center; gap:12px; margin-top:9px;}
+  .bar{height:8px; background:#E7DFCC; border-radius:99px; overflow:hidden; flex:1;}
+  .bar i{display:block; height:100%; width:0; background:linear-gradient(90deg, var(--a), var(--the)); transition:width .35s;}
+  .bar.full i{background:var(--ok);}
+  #scoreLbl{font:700 13px var(--sans); color:#4A4436; white-space:nowrap;}
+
+  /* ---------- sections ---------- */
+  main{padding:26px 0 10px;}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:6px 24px 18px; margin-bottom:22px; box-shadow:0 2px 10px rgba(60,50,30,.06);}
+  .card-head{display:flex; align-items:center; gap:12px; padding:16px 0 12px; border-bottom:2px solid #40434B; flex-wrap:wrap;}
+  .tag{background:#40434B; color:#fff; font:800 13px var(--sans); letter-spacing:.4px; padding:5px 11px; border-radius:6px;}
+  .instr{font:600 14.5px var(--sans); color:#4A4436;}
+  .wa{color:var(--a);} .wt{color:var(--the);} .wz{color:var(--zero);}
+  .score-chip{margin-left:auto; font:700 12.5px var(--sans); color:#6B6353; background:#F1EADB; padding:5px 12px; border-radius:999px; white-space:nowrap;}
+  .model{font:400 14.5px/1.65 var(--sans); color:#5C5648; background:#FBF7EC; border:1px dashed #C9C0AC; border-radius:10px; padding:9px 14px; margin:14px 0 4px;}
+  .model .serif{font-family:var(--serif); font-size:16px; color:var(--ink);}
+
+  .item{display:grid; grid-template-columns:34px 1fr; gap:4px 12px; padding:10px 0; border-bottom:1px dashed var(--line);}
+  .item:last-child{border-bottom:none;}
+  .num{font:700 13px var(--sans); color:#8A8272; background:#F1EADB; border-radius:8px; height:26px; display:flex; align-items:center; justify-content:center; margin-top:5px; transition:.2s;}
+  .item.done .num{background:var(--ok); color:#fff;}
+  .sen{font:400 17.5px/2.3 var(--serif); color:var(--ink);}
+  .note{grid-column:2; display:none; font:400 13.5px/1.5 var(--sans); color:#5C5648; background:#FBF7EC; border-left:3px solid #C9C0AC; border-radius:0 8px 8px 0; padding:7px 12px; margin:2px 0 4px;}
+  .note b{color:#8A6D3B; font-weight:700;}
+  .item.done .note, body.revealed .note{display:block;}
+
+  /* ---------- blanks ---------- */
+  select.blank{
+    appearance:none; -webkit-appearance:none; font:600 14.5px var(--sans);
+    border:1.5px dashed #C9C0AC; border-radius:9px; background:#fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M1 1l4 4 4-4' stroke='%238A8272' stroke-width='1.6' fill='none' stroke-linecap='round'/></svg>") no-repeat right 9px center;
+    color:#9A917C; padding:3px 26px 4px 12px; margin:0 3px; min-width:64px; cursor:pointer; vertical-align:middle; transition:.15s;
+  }
+  select.blank:hover{border-color:#8A8272;}
+  select.blank:focus-visible{outline:2px solid var(--the); outline-offset:1px;}
+  select.blank.cap{text-transform:capitalize;}
+  select.blank.wd{min-width:136px;}
+  select.blank.wd:not([data-v=""]){background-color:#FBF0D9; border:1.5px solid #C9A86A; color:#6B4E16;}
+  select.blank[data-v="a"], select.blank[data-v="an"]{background-color:#FBE9E3; border:1.5px solid var(--a); color:#B33A1B;}
+  select.blank[data-v="the"]{background-color:#E8EAF6; border:1.5px solid var(--the); color:var(--the);}
+  select.blank[data-v="Ø"]{background-color:#ECECEA; border:1.5px solid var(--zero); color:#4B5563;}
+  select.blank.ok{box-shadow:0 0 0 2.5px rgba(30,142,62,.30); border-color:var(--ok);}
+  select.blank.wrong{box-shadow:0 0 0 2.5px rgba(217,48,37,.30); border-color:var(--bad); animation:shake .3s;}
+  select.blank.miss{box-shadow:0 0 0 2.5px rgba(242,153,0,.30); border-color:var(--warn);}
+  select.blank:disabled{cursor:default; opacity:.92;}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+
+  /* ---------- toast & footer ---------- */
+  #toast{position:fixed; left:50%; top:14px; transform:translateX(-50%) scale(.9); opacity:0; pointer-events:none; transition:.25s; background:var(--ok); color:#fff; padding:11px 22px; border-radius:999px; font:700 14.5px var(--sans); box-shadow:0 8px 24px rgba(0,0,0,.25); z-index:99;}
+  #toast.show{opacity:1; transform:translateX(-50%) scale(1);}
+  #toast.dark{background:#40434B;}
+  footer{padding:8px 0 40px; font:400 12.5px/1.6 var(--sans); color:#8A8272;}
+  @media (max-width:640px){
+    .glyphs{display:none;}
+    h1{font-size:27px;} h1 em{font-size:27px;}
+    .sen{font-size:16px;}
+    .switch{margin-left:0;}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="glyphs" aria-hidden="true"><span>a</span><span>the</span><span>Ø</span></div>
+  <div class="wrap">
+    <div class="kicker">UNIT 7 · EXERCISES · ИНТЕРАКТИВ</div>
+    <h1>Конструкция с of: <em>the … of</em> или <em>a … of</em>?</h1>
+    <p class="sub">Упражнения 7.1 и 7.2 — выберите артикль. Упражнение 7.3 — составьте словосочетание: выберите артикль и подходящую пару слов из рамки. После проверки появится объяснение к каждому предложению.</p>
+    <div class="legend">
+      <span class="chip ct"><b>the … of</b> чей? часть чего? какой именно?</span>
+      <span class="chip ca"><b>a … of</b> сколько? из чего? с чем? какой?</span>
+      <span class="chip cs"><b>the + a</b> the son of a doctor — «сын врача»</span>
+    </div>
+  </div>
+</header>
+
+<div class="toolbar">
+  <div class="wrap">
+    <div class="tb-row">
+      <button class="btn btn-primary" id="checkBtn">Проверить</button>
+      <button class="btn btn-outline" id="revealBtn">Показать ответы</button>
+      <button class="btn btn-ghost" id="resetBtn">Сбросить</button>
+      <label class="switch"><input type="checkbox" id="immChk"> проверять сразу при выборе</label>
+    </div>
+    <div class="tb-row2">
+      <div class="bar" id="bar"><i id="barFill"></i></div>
+      <span id="scoreLbl">Верно: 0 / 0</span>
+    </div>
+  </div>
+</div>
+
+<main><div class="wrap" id="sections"></div></main>
+
+<footer><div class="wrap">Сделано по упражнениям 7.1, 7.2 и 7.3 (Unit 7) учебника. Подсветка пропусков совпадает с выбором: синий — the, оранжевый — a/an, серый — Ø (без артикля). Там, где возможны два варианта, засчитываются оба. Пояснения к предложениям — редакция пособия-плаката.</div></footer>
+
+<div id="toast" role="status"></div>
+
+<script>
+"use strict";
+/* ------------------------------------------------ data ------------------------------------------------ */
+const DATA = [
+  { id:"7.1", instr:"Заполните пропуски артиклями.", opts:["a", "an", "the"], items:[
+    { n:1, seg:["Can you explain ", 0, " idea of the article?"], ans:["the"],
+      note:"идея чего? — принадлежность → the idea of." },
+    { n:2, seg:["I’m afraid it will be ", 0, " waste of time."], ans:["a"],
+      note:"a waste of time — характеристика («пустая трата времени») → a." },
+    { n:3, seg:["Please get ", 0, " scarf of wool for him."], ans:["a"],
+      note:"материал (из чего?) → a scarf of wool." },
+    { n:4, seg:["She is ", 0, " daughter of ", 1, " sportsman."], ans:["the", "a"],
+      note:"«дочь спортсмена»: дочь — именно его → the; спортсмен — один из многих → a." },
+    { n:5, seg:["The children had found ", 0, " box of matches and were playing with it."], ans:["a"],
+      note:"содержимое (с чем?) → a box of matches." },
+    { n:6, seg:[0, " roof of the house is very old."], ans:["the"],
+      note:"крыша чего? — часть целого → the roof of." },
+    { n:7, seg:["You’ll have to pay ", 0, " fine of fifty pounds."], ans:["a"],
+      note:"мера (сколько?) → a fine of fifty pounds." },
+    { n:8, seg:["You must speak to ", 0, " owner of the company first."], ans:["the"],
+      note:"владелец чего? — принадлежность → the owner of." },
+    { n:9, seg:["I saw him speaking with ", 0, " group of students yesterday."], ans:["a"],
+      note:"состав, группа → a group of students." },
+    { n:10, seg:["The article deals with the latest discoveries in ", 0, " field of medicine."], ans:["the"],
+      note:"область чего именно? — уточнение → the field of medicine." }
+  ]},
+  { id:"7.2", instr:"Заполните пропуски артиклями.", opts:["a", "an", "the"], items:[
+    { n:1, seg:["He felt for the key in ", 0, " pockets of the jacket, but found nothing."], ans:["the"],
+      note:"карманы чего? — часть целого → the pockets of." },
+    { n:2, seg:["The doctor says that ", 0, " state of his health is poor."], ans:["the"],
+      note:"состояние чего? — принадлежность → the state of." },
+    { n:3, seg:["Let’s climb to ", 0, " top of the hill."], ans:["the"],
+      note:"вершина чего? — часть целого → the top of." },
+    { n:4, seg:["I need ", 0, " pound of sugar and ", 1, " box of chocolates."], ans:["a", "a"],
+      note:"мера (a pound of) и содержимое (a box of) → a." },
+    { n:5, seg:["The country has ", 0, " area of 96,000 sq. km."], ans:["an"],
+      note:"мера (сколько?) → a; перед гласным звуком — an area of." },
+    { n:6, seg:[0, " price of fuel has grown recently."], ans:["the"],
+      note:"цена чего? — принадлежность → the price of fuel." },
+    { n:7, seg:["I know he has just bought a car at ", 0, " price of about 30 thousand dollars."], ans:["a"],
+      note:"какая цена, сколько? — мера → a price of about…" },
+    { n:8, seg:["There is something wrong with ", 0, " leg of the table."], ans:["the|a"],
+      note:"ножка чего? — часть целого → the leg of the table. (У стола несколько ножек, поэтому a leg — «одна из ножек» — тоже засчитывается.)" },
+    { n:9, seg:["He was ", 0, " man of a medium height."], ans:["a"],
+      note:"характеристика (какой?) → a man of…" },
+    { n:10, seg:["He liked ", 0, " glass of beer on a hot day."], ans:["a"],
+      note:"содержимое (с чем?) → a glass of beer." }
+  ]},
+  { id:"7.3", instr:"Ответьте на вопросы, составляя словосочетания a … of, the … of из следующих слов.", opts:["a", "the"], model:"Слова: <span class=\"serif\">position, manager · daughter, scientist · development, science · face, man · front, house · book, interest · girl, thirteen · collar, shirt · bottom, page · sense, duty · distance, twenty miles · man, culture · glass, juice · dress, silk · result, exam</span>", items:[
+    { n:1, seg:["Is her father a teacher? — No, he isn’t. She is ", 0, " ", {"i": 1, "o": ["position of a manager", "daughter of a scientist", "development of science", "face of the man", "front of the house", "book of interest", "girl of thirteen", "collar of the shirt", "bottom of the page", "sense of duty", "distance of twenty miles", "man of culture", "glass of juice", "dress of silk", "results of the exam"]}, "."], ans:["the", "daughter of a scientist"],
+      note:"«дочь учёного»: the daughter of a scientist. (В учебнике напечатано «He is», но по смыслу подходит только «She is the daughter of a scientist».)" },
+    { n:2, seg:["Did you walk long? — Yes, we did. By the evening we had covered ", 0, " ", {"i": 1, "o": ["position of a manager", "daughter of a scientist", "development of science", "face of the man", "front of the house", "book of interest", "girl of thirteen", "collar of the shirt", "bottom of the page", "sense of duty", "distance of twenty miles", "man of culture", "glass of juice", "dress of silk", "results of the exam"]}, "."], ans:["a", "distance of twenty miles"],
+      note:"мера (сколько?) → a distance of." },
+    { n:3, seg:["Are you thirsty? — I’m. I could do with ", 0, " ", {"i": 1, "o": ["position of a manager", "daughter of a scientist", "development of science", "face of the man", "front of the house", "book of interest", "girl of thirteen", "collar of the shirt", "bottom of the page", "sense of duty", "distance of twenty miles", "man of culture", "glass of juice", "dress of silk", "results of the exam"]}, "."], ans:["a", "glass of juice"],
+      note:"содержимое (с чем?) → a glass of." },
+    { n:4, seg:["Is he well-educated? — I’m sure of that. He is ", 0, " ", {"i": 1, "o": ["position of a manager", "daughter of a scientist", "development of science", "face of the man", "front of the house", "book of interest", "girl of thirteen", "collar of the shirt", "bottom of the page", "sense of duty", "distance of twenty miles", "man of culture", "glass of juice", "dress of silk", "results of the exam"]}, "."], ans:["a", "man of culture"],
+      note:"характеристика (какой?) → a man of culture." },
+    { n:5, seg:["I advise you to read the novel. It’s certainly ", 0, " ", {"i": 1, "o": ["position of a manager", "daughter of a scientist", "development of science", "face of the man", "front of the house", "book of interest", "girl of thirteen", "collar of the shirt", "bottom of the page", "sense of duty", "distance of twenty miles", "man of culture", "glass of juice", "dress of silk", "results of the exam"]}, "."], ans:["a", "book of interest"],
+      note:"характеристика (какая?) → a book of interest." },
+    { n:6, seg:["Does she have children? — Yes, she does. She has ", 0, " ", {"i": 1, "o": ["position of a manager", "daughter of a scientist", "development of science", "face of the man", "front of the house", "book of interest", "girl of thirteen", "collar of the shirt", "bottom of the page", "sense of duty", "distance of twenty miles", "man of culture", "glass of juice", "dress of silk", "results of the exam"]}, "."], ans:["a", "girl of thirteen"],
+      note:"возраст → a girl of thirteen." },
+    { n:7, seg:["Change your clothes at once. ", 0, " ", {"i": 1, "o": ["position of a manager", "daughter of a scientist", "development of science", "face of the man", "front of the house", "book of interest", "girl of thirteen", "collar of the shirt", "bottom of the page", "sense of duty", "distance of twenty miles", "man of culture", "glass of juice", "dress of silk", "results of the exam"]}, " is dirty."], ans:["the", "collar of the shirt"],
+      note:"воротник чего? — часть целого → the collar of the shirt." },
+    { n:8, seg:["Does she work? Yes, she does. She was offered ", 0, " ", {"i": 1, "o": ["position of a manager", "daughter of a scientist", "development of science", "face of the man", "front of the house", "book of interest", "girl of thirteen", "collar of the shirt", "bottom of the page", "sense of duty", "distance of twenty miles", "man of culture", "glass of juice", "dress of silk", "results of the exam"]}, " not long ago."], ans:["the", "position of a manager"],
+      note:"должность какая именно? — уточнение → the position of a manager." },
+    { n:9, seg:["The child is very responsible and has ", 0, " ", {"i": 1, "o": ["position of a manager", "daughter of a scientist", "development of science", "face of the man", "front of the house", "book of interest", "girl of thirteen", "collar of the shirt", "bottom of the page", "sense of duty", "distance of twenty miles", "man of culture", "glass of juice", "dress of silk", "results of the exam"]}, "."], ans:["a", "sense of duty"],
+      note:"качество → a sense of duty (как a sense of humour)." },
+    { n:10, seg:["He is busy preparing a talk on ", 0, " ", {"i": 1, "o": ["position of a manager", "daughter of a scientist", "development of science", "face of the man", "front of the house", "book of interest", "girl of thirteen", "collar of the shirt", "bottom of the page", "sense of duty", "distance of twenty miles", "man of culture", "glass of juice", "dress of silk", "results of the exam"]}, "."], ans:["the", "development of science"],
+      note:"развитие чего? — принадлежность → the development of." },
+    { n:11, seg:["Turn over the page and you’ll find the word at ", 0, " ", {"i": 1, "o": ["position of a manager", "daughter of a scientist", "development of science", "face of the man", "front of the house", "book of interest", "girl of thirteen", "collar of the shirt", "bottom of the page", "sense of duty", "distance of twenty miles", "man of culture", "glass of juice", "dress of silk", "results of the exam"]}, "."], ans:["the", "bottom of the page"],
+      note:"низ чего? — часть целого → the bottom of the page." },
+    { n:12, seg:["What did she wear at the party? — ", 0, " ", {"i": 1, "o": ["position of a manager", "daughter of a scientist", "development of science", "face of the man", "front of the house", "book of interest", "girl of thirteen", "collar of the shirt", "bottom of the page", "sense of duty", "distance of twenty miles", "man of culture", "glass of juice", "dress of silk", "results of the exam"]}, "."], ans:["a", "dress of silk"],
+      note:"материал (из чего?) → a dress of silk." },
+    { n:13, seg:[0, " ", {"i": 1, "o": ["position of a manager", "daughter of a scientist", "development of science", "face of the man", "front of the house", "book of interest", "girl of thirteen", "collar of the shirt", "bottom of the page", "sense of duty", "distance of twenty miles", "man of culture", "glass of juice", "dress of silk", "results of the exam"]}, " sitting over there seems familiar to me."], ans:["the", "face of the man"],
+      note:"лицо чьё? — принадлежность → the face of the man." },
+    { n:14, seg:["I must buy some paint. I want to paint ", 0, " ", {"i": 1, "o": ["position of a manager", "daughter of a scientist", "development of science", "face of the man", "front of the house", "book of interest", "girl of thirteen", "collar of the shirt", "bottom of the page", "sense of duty", "distance of twenty miles", "man of culture", "glass of juice", "dress of silk", "results of the exam"]}, "."], ans:["the", "front of the house"],
+      note:"фасад чего? — часть целого → the front of the house." },
+    { n:15, seg:["The students were waiting for ", 0, " ", {"i": 1, "o": ["position of a manager", "daughter of a scientist", "development of science", "face of the man", "front of the house", "book of interest", "girl of thirteen", "collar of the shirt", "bottom of the page", "sense of duty", "distance of twenty miles", "man of culture", "glass of juice", "dress of silk", "results of the exam"]}, "."], ans:["the", "results of the exam"],
+      note:"результаты чего? — принадлежность → the results of the exam. Так в ключе учебника; в рамке слово дано в единственном числе (result), артикль от этого не меняется." }
+  ]}
+];
+
+/* ------------------------------------------------ build ------------------------------------------------ */
+const ANSW = {}, DISP = {}, ITEM_KEYS = {}, KEY_EL = {}, EX_TOTAL = {};
+DATA.forEach(ex => {
+  EX_TOTAL[ex.id] = ex.items.reduce((s,it)=>s+it.ans.length,0);
+  ex.items.forEach(it => {
+    const ik = ex.id + "/" + it.n;
+    ITEM_KEYS[ik] = it.ans.map((a,b)=>{ const k = ik + "/" + b; ANSW[k] = a.toLowerCase().split("|"); DISP[k] = a.split("|")[0]; return k; });
+  });
+});
+const TOTAL = Object.keys(ANSW).length;
+
+const sections = document.getElementById("sections");
+DATA.forEach(ex => {
+  const card = document.createElement("section"); card.className = "card";
+  const head = document.createElement("div"); head.className = "card-head";
+  head.innerHTML = '<span class="tag">УПР. ' + ex.id + '</span><span class="instr">' + ex.instr + '</span>' +
+                   '<span class="score-chip" id="sc-' + ex.id + '">0 / ' + EX_TOTAL[ex.id] + '</span>';
+  card.appendChild(head);
+  if (ex.model){ const m = document.createElement("div"); m.className = "model"; m.innerHTML = ex.model; card.appendChild(m); }
+  ex.items.forEach(it => {
+    const item = document.createElement("div"); item.className = "item";
+    const ik = ex.id + "/" + it.n; item.dataset.ik = ik;
+    const num = document.createElement("span"); num.className = "num"; num.textContent = it.n; item.appendChild(num);
+    const sen = document.createElement("div"); sen.className = "sen";
+    it.seg.forEach((sg,i) => {
+      if (typeof sg === "string") { sen.appendChild(document.createTextNode(sg)); return; }
+      const isObj = typeof sg === "object";
+      const bi = isObj ? sg.i : sg;
+      const opts = (isObj && sg.o) ? sg.o : ex.opts;
+      const s = document.createElement("select");
+      const prev = i > 0 && typeof it.seg[i-1] === "string" ? it.seg[i-1] : "";
+      s.className = "blank" + (isObj ? " wd" : "") + (((i === 0 || /[.?!—]\s*$/.test(prev)) && !isObj) ? " cap" : "");
+      const k = ik + "/" + bi;
+      s.dataset.key = k; s.dataset.v = "";
+      s.innerHTML = '<option value="">…</option>' + opts.map(o => '<option value="'+o+'">'+o+'</option>').join("");
+      s.addEventListener("change", onChange);
+      KEY_EL[k] = s; sen.appendChild(s);
+    });
+    item.appendChild(sen);
+    const note = document.createElement("div"); note.className = "note";
+    note.innerHTML = "<b>Почему:</b> " + it.note;
+    item.appendChild(note);
+    card.appendChild(item);
+  });
+  sections.appendChild(card);
+});
+const ALL = Object.values(KEY_EL);
+
+/* ------------------------------------------------ logic ------------------------------------------------ */
+const bar = document.getElementById("bar"), barFill = document.getElementById("barFill"),
+      scoreLbl = document.getElementById("scoreLbl"), toast = document.getElementById("toast"),
+      imm = document.getElementById("immChk");
+let toastTimer = null;
+
+function gradeBlank(s){
+  s.classList.remove("ok","wrong","miss");
+  if (!s.value) { s.classList.add("miss"); return false; }
+  const ok = ANSW[s.dataset.key].includes(s.value.toLowerCase());
+  if (ok) s.classList.add("ok");
+  else { void s.offsetWidth; s.classList.add("wrong"); }
+  return ok;
+}
+function refreshItems(){
+  document.querySelectorAll(".item").forEach(it => {
+    const els = ITEM_KEYS[it.dataset.ik].map(k => KEY_EL[k]);
+    it.classList.toggle("done", els.length > 0 && els.every(s => s.classList.contains("ok")));
+  });
+}
+function refreshScores(){
+  let okAll = 0;
+  DATA.forEach(ex => {
+    let ok = 0;
+    ex.items.forEach(it => ITEM_KEYS[ex.id + "/" + it.n].forEach(k => { if (KEY_EL[k].classList.contains("ok")) ok++; }));
+    document.getElementById("sc-" + ex.id).textContent = ok + " / " + EX_TOTAL[ex.id];
+    okAll += ok;
+  });
+  const revealed = document.body.classList.contains("revealed");
+  scoreLbl.textContent = revealed ? ("Ответы показаны · " + TOTAL + " / " + TOTAL) : ("Верно: " + okAll + " / " + TOTAL);
+  barFill.style.width = (okAll / TOTAL * 100) + "%";
+  bar.classList.toggle("full", okAll === TOTAL);
+  return okAll;
+}
+function showToast(msg, dark){
+  toast.textContent = msg;
+  toast.classList.toggle("dark", !!dark);
+  toast.classList.add("show");
+  clearTimeout(toastTimer); toastTimer = setTimeout(()=>toast.classList.remove("show"), 4200);
+}
+function onChange(e){
+  const s = e.target;
+  s.dataset.v = s.value;
+  s.classList.remove("ok","wrong","miss");
+  if (imm.checked && s.value) gradeBlank(s);
+  refreshItems(); refreshScores(); save();
+}
+document.getElementById("checkBtn").addEventListener("click", () => {
+  ALL.forEach(s => gradeBlank(s));
+  refreshItems();
+  const ok = refreshScores(); save();
+  if (ok === TOTAL) showToast("🎉 Отлично! Все " + TOTAL + " пропусков — верно!");
+  else showToast("Проверено: верно " + ok + " из " + TOTAL + ". Ошибки подсвечены красным, пустые — жёлтым.", true);
+});
+document.getElementById("revealBtn").addEventListener("click", () => {
+  document.body.classList.add("revealed");
+  ALL.forEach(s => { s.value = DISP[s.dataset.key]; s.dataset.v = s.value; s.classList.remove("wrong","miss"); s.classList.add("ok"); s.disabled = true; });
+  refreshItems(); refreshScores(); save();
+});
+document.getElementById("resetBtn").addEventListener("click", () => {
+  document.body.classList.remove("revealed");
+  toast.classList.remove("show");
+  ALL.forEach(s => { s.value = ""; s.dataset.v = ""; s.classList.remove("ok","wrong","miss"); s.disabled = false; });
+  refreshItems(); refreshScores(); save();
+});
+imm.addEventListener("change", () => {
+  if (imm.checked) ALL.forEach(s => { if (s.value && !s.disabled) gradeBlank(s); });
+  refreshItems(); refreshScores(); save();
+});
+
+/* ------------------------------------------------ persistence (guarded) ------------------------------------------------ */
+function save(){
+  try {
+    const vals = {}; ALL.forEach(s => { if (s.value) vals[s.dataset.key] = s.value; });
+    localStorage.setItem("unit7-articles", JSON.stringify({ vals, imm: imm.checked, revealed: document.body.classList.contains("revealed") }));
+  } catch(e) {}
+}
+function load(){
+  try {
+    const st = JSON.parse(localStorage.getItem("unit7-articles") || "null");
+    if (!st) return;
+    imm.checked = !!st.imm;
+    Object.entries(st.vals || {}).forEach(([k,v]) => { if (KEY_EL[k]) { KEY_EL[k].value = v; KEY_EL[k].dataset.v = v; } });
+    if (st.revealed) document.getElementById("revealBtn").click();
+  } catch(e) {}
+}
+load();
+refreshItems(); refreshScores();
+</script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5a725f37fcd9db8',t:'MTc5NDY3MTE3OA=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5a725f37fcd9db8',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
